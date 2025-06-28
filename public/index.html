@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css" type="text/css" />
-    <title>Home</title>
-</head>
-<body>
-    <h1>Hi students, Welcome to DevOps Class!</h1>
-    <p>This is an introduction to Docker.</p>
+<form id="userForm">
+  <label>Username: <input name="username" required /></label>
+  <label>Email: <input name="email" type="email" required /></label>
+  <label>Password: <input name="password" type="password" required /></label>
+  <button type="submit">Create Account</button>
+</form>
 
-    <form action="/addUser" method="POST" target="_blank" id="signupForm">
-        <div class="field">
-            <label for="email">Email: </label>
-            <input type="text" placeholder="ram@email.com" name="email">
-        </div>
-        <div class="field">    
-        <label for="username">Username: </label>
-            <input type="text" placeholder="Ram Hari" name="username">
-        </div>
-        <div class="field">
-            <label for="password">Password: </label>
-            <input type="password" placeholder="password" name="password">
-        </div>
-        
-        <button id="formBtn">Create Account</button>
-        
-    </form>
-</body>
+<div id="message"></div>
 
-</html>
+<script>
+  document.getElementById("userForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); // ⛔ Prevents page reload
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("/addUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const msg = await res.text();
+      document.getElementById("message").textContent = msg;
+    } catch (err) {
+      document.getElementById("message").textContent = "Something went wrong.";
+      console.error(err);
+    }
+  });
+</script>
